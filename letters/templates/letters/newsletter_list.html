@@ -1,0 +1,28 @@
+{% extends 'letters/base.html' %}
+
+{% block content %}
+
+  <div>
+    <a
+      href="{% url 'letters:newsletter_create' %}"
+      type="submit" class="btn btn-outline-info ml-auto mt-4">Создать</a>
+    <div class="row">
+      {% for newsletter in object_list %}
+        <div class="card mt-4 mb-4 mr-4 ml-4 col-lg-3">
+          <div class="card-body">
+            <h5 class="card-title"><strong>{{ newsletter.name|title }}</strong></h5>
+            <p class="card-text"><strong>Статус: </strong><em>{{ newsletter.get_status_display|title }}</em></p>
+            <p class="card-text"><strong>Время рассылки: </strong><em>{{ newsletter.send_time }}</em></p>
+            <p class="card-text"><strong>Периодичность: </strong><em>{{ newsletter.get_frequency_display }}</em></p>
+            <p class="card-text"><strong>Сообщение: </strong><em>{{ newsletter.message }}</em></p>
+            <a href="{% url 'letters:maillog' newsletter.pk %}" class="btn btn-dark mb-2 btn-block">Просмотр логов</a>
+            <a href="{% url 'letters:message_view' pk=newsletter.message.pk %}" class="btn btn-dark mb-2 btn-block">Просмотр сообщения</a>
+            <a href="{% url 'letters:newsletter_update' pk=newsletter.pk %}" class="btn btn-dark mb-2 btn-block">Редактировать</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+{% endblock %}
+

@@ -1,0 +1,68 @@
+{% load static %}
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="canonical" href="#">
+    <style>
+      .d-flex.flex-column {height: 100vh;}
+    </style>
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+  </head>
+  <body>
+
+    <main class="container-fluid">
+      <div class="row">
+        <div class="col-2 p-3 text-white bg-dark d-flex flex-column p-0">
+          <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+            <h5 class="fs-4">Навигация сайта</h5>
+          </a>
+          <hr>
+          <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+              <a href="{% url 'letters:index' %}" class="nav-link text-white {% if request.path == '/' %}active{% endif %}">
+                <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"/></svg>
+                Главная
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'letters:clients' %}" class="nav-link text-white {% if request.path == '/clients/' %}active{% endif %}">
+                <svg class="bi me-2" width="16" height="16"><use xlink:href="#speedometer2"/></svg>
+                Клиенты
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'letters:newsletter' %}" class="nav-link text-white {% if request.path == '/newsletter/' %}active{% endif %}">
+                <svg class="bi me-2" width="16" height="16"><use xlink:href="#newsletter"/></svg>
+                Рассылки
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'letters:message' %}" class="nav-link text-white {% if request.path == '/message/' %}active{% endif %}">
+                <svg class="bi me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+                Сообщения
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-10">
+          <!-- контейнер и элементы, которые вы хотите добавить -->
+          <div class="container">
+            <div class="row">
+              {% block content %}
+              {% endblock %}
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </body>
+</html>

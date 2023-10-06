@@ -1,0 +1,21 @@
+{% extends 'letters/base.html' %}
+
+{% block content %}
+
+  <div>
+    <div class="row">
+      {% for maillog in object_list %}
+        <div class="card mt-4 mb-4 mr-4 ml-4 col-lg-33">
+          <div class="card-body">
+            <p class="card-title"><strong>Дата/время: </strong><em>{{ maillog.last_sent }}</em></p>
+            <p class="card-text"><strong>Статус:</strong> <em>{{ maillog.status }}</em></p>
+            <p class="card-text"><strong>Ответ почтового сервера:</strong> <em>{{ maillog.server_response }}</em></p>
+            <p class="card-text"><strong>Имя рассылки:</strong> <em>{{ maillog.newsletter.name }}</em></p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+{% endblock %}
+
