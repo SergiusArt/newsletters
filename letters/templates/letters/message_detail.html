@@ -1,10 +1,10 @@
-{% extends 'letters/base.html' %}
+{% extends 'letters/base.html' %} <!-- Наследование от базового шаблона -->
 
-{% block content %}
-  <div class="card mt-4 mb-4 mr-4 ml-4">
-    <div class="card-body">
-      <h5 class="card-title">{{ message.subject|title }}</h5>
-      <p class="card-text">{{ message.body }}</p>
+{% block content %} <!-- Начало блока содержимого -->
+  <div class="card mt-4 mb-4 mr-4 ml-4"> <!-- Создание карточки с отступами -->
+    <div class="card-body"> <!-- Создание тела карточки -->
+      <h5 class="card-title">{{ message.subject|title }}</h5> <!-- Заголовок сообщения с применением фильтра для преобразования в заглавные буквы -->
+      <p class="card-text">{{ message.body }}</p> <!-- Текст сообщения -->
     </div>
   </div>
-{% endblock %}
+{% endblock %} <!-- Конец блока содержимого -->

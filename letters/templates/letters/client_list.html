@@ -1,23 +1,27 @@
-{% extends 'letters/base.html' %}
+{% extends 'letters/base.html' %} <!-- Расширение базового шаблона -->
 
-{% block content %}
-
+{% block content %} <!-- Начало блока контента -->
   <div>
-    <a
-      href="{% url 'letters:clients_create' %}"
-      type="submit" class="btn btn-outline-info ml-auto mt-4">Создать</a>
+    <!-- Кнопка создания нового клиента -->
+    <a href="{% url 'letters:clients_create' %}" type="submit" class="btn btn-outline-info ml-auto mt-4">Создать</a>
     <div class="row">
+      <!-- Цикл для отображения информации о каждом клиенте -->
       {% for client in object_list %}
-        <div class="card mt-4 mb-4 mr-4 ml-4 col-lg-3">
+        <div class="card mt-4 mb-4 mr-4 ml-4 col-lg-10">
           <div class="card-body">
+            <!-- Имя клиента -->
             <h5 class="card-title"><strong>{{ client.full_name|title }}</strong></h5>
+            <!-- Почта клиента -->
             <p class="card-text"><strong>Почта: </strong><em>{{ client.email }}</em></p>
+            <!-- Комментарий клиента -->
             <p class="card-text"><strong>Комментарий: </strong><em>{{ client.comment }}</em></p>
-            <a href="{% url 'letters:clients_update' pk=client.pk %}" class="btn btn-dark mb-2 btn-block">Редактировать</a>
+            <!-- Кнопка редактирования информации о клиенте, доступна только для не персонала -->
+            {% if not request.user.is_staff %}
+                <a href="{% url 'letters:clients_update' pk=client.pk %}" class="btn btn-dark mb-2 btn-block">Редактировать</a>
+            {% endif %}
           </div>
         </div>
       {% endfor %}
     </div>
   </div>
-
-{% endblock %}
+{% endblock %} <!-- Конец блока контента -->

@@ -1,0 +1,18 @@
+{% extends 'letters/base.html' %} <!-- Наследование от основного шаблона -->
+
+{% block content %} <!-- Начало блока контента -->
+    <form method="post" class="row" enctype="multipart/form-data"> <!-- Форма регистрации -->
+        <div class="col-6"> <!-- Колонка для формы -->
+            <div class="card"> <!-- Карточка для формы -->
+                <div class="card-header"> <!-- Заголовок карточки -->
+                    <h3 class="card-title">Регистрация</h3> <!-- Заголовок формы -->
+                </div>
+                <div class="card-body"> <!-- Тело карточки -->
+                    {% csrf_token %} <!-- Токен безопасности -->
+                    {{ form.as_p }} <!-- Отображение полей формы -->
+                    <button type="submit" class="btn btn-outline-success">Регистрация</button> <!-- Кнопка отправки формы -->
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %} <!-- Конец блока контента -->

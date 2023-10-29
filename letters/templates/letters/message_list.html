@@ -1,21 +1,30 @@
-{% extends 'letters/base.html' %}
+{% extends 'letters/base.html' %} <!-- Наследование общего шаблона -->
 
-{% block content %}
-
+{% block content %} <!-- Блок контента -->
   <div>
+    <!-- Кнопка для создания нового сообщения -->
     <a href="{% url 'letters:message_create' %}" type="submit" class="btn btn-outline-info ml-auto mt-4">Создать</a>
+
     <div class="row">
+      <!-- Цикл для отображения всех сообщений из списка -->
       {% for message in object_list %}
-        <div class="card mt-4 mb-4 mr-4 ml-4 col-lg-3">
+        <div class="card mt-4 mb-4 mr-4 ml-4 col-lg-10">
           <div class="card-body">
+            <!-- Заголовок и текст сообщения -->
             <h5 class="card-title">{{ message.subject|title }}</h5>
             <p class="card-text">{{ message.body }}</p>
-            <a href="{% url 'letters:message_update' pk=message.pk %}" class="btn btn-dark mb-2 btn-block">Редактировать</a>
+
+            <!-- Если пользователь не является администратором, отображается кнопка редактирования -->
+            {% if not request.user.is_staff %}
+             <a href="{% url 'letters:message_update' pk=message.pk %}" class="btn btn-dark mb-2 btn-block">Редактировать</a>
+            {% endif %}
+
+            <!-- Кнопка для просмотра сообщения -->
             <a href="{% url 'letters:message_view' pk=message.pk %}" class="btn btn-info mb-2 btn-block">Просмотр</a>
           </div>
         </div>
       {% endfor %}
     </div>
   </div>
-
 {% endblock %}
+  

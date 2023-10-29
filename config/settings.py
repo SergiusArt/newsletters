@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+
+from celery.schedules import crontab
+
 from src.config import config
 
 # Данные для загрузки параметров для Базы данных берутся из файла database.ini
@@ -44,6 +47,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'letters',
+    'users',
+    'blog',
+
+    'django_cron',
+    'django_extensions',
+
 ]
 
 MIDDLEWARE = [
@@ -114,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'ru-ru'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'Europe/Moscow'
 
@@ -136,3 +145,51 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# smtp Settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('smtp_ya_host')
+EMAIL_PORT = int(os.environ.get('smtp_ya_port'))
+EMAIL_HOST_USER = os.environ.get('smtp_ya_mail')
+EMAIL_HOST_PASSWORD = os.environ.get('smtp_ya_password')
+EMAIL_USE_TLS = True
+
+
+# Celery Settings + Redis
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Europe/Moscow'
+CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+
+
+CELERY_BEAT_SCHEDULE = {
+    'send_newsletter_task': {
+        'task': 'letters.tasks.send_newsletter',
+        'schedule': crontab(minute='*/1'),  # Здесь указывается периодичность в cron-формате
+    },
+}
+
+AUTH_USER_MODEL = 'users.User'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+LOGIN_URL = 'users:login'
+
+CACHE_ENABLED = os.getenv('CACHE_ENABLED') == True
+
+if CACHE_ENABLED:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': os.getenv('LOCATION'),  # адрес и порт Redis сервера
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            }
+        }
+    }
+
+# Redis в качестве брокера для кеширования
+BROKER_URL = os.getenv('LOCATION')  # адрес и порт Redis сервера

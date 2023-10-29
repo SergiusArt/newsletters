@@ -1,0 +1,38 @@
+  django
+{% extends 'letters/base.html' %}
+
+{% block content %}
+  <!-- Обертка для содержимого -->
+  <div>
+    <!-- Ряд для карточек пользователей -->
+    <div class="row">
+      <!-- Цикл для отображения каждого пользователя в списке -->
+      {% for user in object_list %}
+        <!-- Карточка пользователя -->
+        <div class="card mt-4 mb-4 mr-4 ml-4 col-lg-12">
+          <!-- Электронная почта пользователя -->
+          <p class="col-lg-3 mb-4">Пользователь: {{ user.email }}</p>
+          <!-- Область для кнопок управления статусом пользователя -->
+          <div class="col-lg-9">
+            <!-- Если пользователь не активен, показать кнопку "Разблокировать" -->
+            {% if not user.is_active %}
+              <form method="POST" action="{% url 'users:user_list' %}" class="d-inline">
+                {% csrf_token %}
+                <input type="hidden" name="unlock_user" value="{{ user.id }}">
+                <input type="submit" value="Разблокировать" class="btn btn-success">
+              </form>
+            <!-- Если пользователь активен, показать кнопку "Заблокировать" -->
+            {% else %}
+              <form method="POST" action="{% url 'users:user_list' %}" class="d-inline">
+                {% csrf_token %}
+                <input type="hidden" name="block_user" value="{{ user.id }}">
+                <input type="submit" value="Заблокировать" class="btn btn-danger">
+              </form>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
+  

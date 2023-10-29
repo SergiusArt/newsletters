@@ -1,0 +1,28 @@
+{% extends 'letters/base.html' %} <!-- Расширяем базовый шаблон -->
+
+{% block content %} <!-- Начинаем блок контента -->
+  <div>
+    <!-- Ссылка на создание нового блога -->
+    <a href="{% url 'blog:create' %}" type="submit" class="btn btn-outline-info ml-auto mt-4">Создать блог</a>
+    <div class="row">
+      <!-- Цикл для отображения каждого блога в списке -->
+      {% for blog in object_list %}
+        <div class="card mt-4 mb-4 mr-4 ml-4 col-lg-10">
+          <div class="card-body">
+            <!-- Заголовок блога -->
+            <h5 class="card-title">{{ blog.title|title }}</h5>
+            <!-- Содержание блога -->
+            <p class="card-text">{{ blog.content }}</p>
+            <!-- Показываем кнопку редактирования только для пользователей, не являющихся сотрудниками -->
+            {% if not request.user.is_staff %}
+             <a href="{% url 'blog:update' pk=blog.pk %}" class="btn btn-dark mb-2 btn-block">Редактировать</a>
+            {% endif %}
+            <!-- Ссылка на просмотр блога -->
+            <a href="{% url 'blog:view' pk=blog.pk %}" class="btn btn-info mb-2 btn-block">Просмотр</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
+  
