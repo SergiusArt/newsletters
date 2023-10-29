@@ -1,0 +1,63 @@
+<!-- Элемент навигации для Главной -->
+<li class="nav-item">
+  <a href="{% url 'letters:index' %}" class="nav-link text-white {% if request.path == '/' %}active{% endif %}">
+    Главная
+  </a>
+</li>
+
+<!-- Отступы -->
+<li><p></p></li>
+<li><p></p></li>
+
+<!-- Элемент навигации для Клиентов -->
+<li>
+  <a href="{% url 'letters:clients' %}" class="nav-link text-white {% if request.path == '/clients/' %}active{% endif %}">
+    Клиенты
+  </a>
+</li>
+
+<!-- Элемент навигации для Рассылок -->
+<li>
+  <a href="{% url 'letters:newsletter' %}" class="nav-link text-white {% if request.path == '/newsletter/' %}active{% endif %}">
+    Рассылки
+  </a>
+</li>
+
+<!-- Элемент навигации для Сообщений -->
+<li>
+  <a href="{% url 'letters:message' %}" class="nav-link text-white {% if request.path == '/message/' %}active{% endif %}">
+    Сообщения
+  </a>
+</li>
+
+<!-- Отступы -->
+<li><p></p></li>
+<li><p></p></li>
+
+<!-- Проверка аутентификации пользователя -->
+{% if user.is_authenticated %}                
+  <!-- Элемент навигации для Выхода -->
+  <li>
+    <a class="nav-link text-white {% if request.path == '/users/logout/' %}active{% endif %}" href="{% url 'users:logout' %}">Выйти</a>
+  </li>
+
+  <!-- Элемент навигации для Профиля -->
+  <li>
+    <a class="nav-link text-white {% if request.path == '/users/profile/' %}active{% endif %}" href="{% url 'users:profile' %}">Профиль</a>
+  </li>
+{% else %}
+  <!-- Элемент навигации для Входа -->
+  <li>
+    <a class="nav-link text-white {% if request.path == '/users/' %}active{% endif %}" href="{% url 'users:login' %}">Войти</a>
+  </li>
+
+  <!-- Элемент навигации для Регистрации -->
+  <li>
+    <a class="nav-link text-white {% if request.path == '/users/register/' %}active{% endif %}" href="{% url 'users:register' %}">Регистрация</a>
+  </li>
+{% endif %}
+
+<!-- Отступы -->
+<li><p></p></li>
+<li><p></p></li>
+  

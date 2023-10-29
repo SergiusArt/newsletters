@@ -1,0 +1,24 @@
+{% extends 'letters/base.html' %}  {# Наследование базового шаблона #}
+
+{% block content %}  {# Начало блока контента #}
+    <!-- Форма для отправки данных методом POST -->
+    <form method="post" class="row" enctype="multipart/form-data">
+        <div class="col-lg-10">
+            <!-- Карточка с информацией о профиле -->
+            <div class="card">
+                <!-- Заголовок карточки -->
+                <div class="card-header">
+                    <h3 class="card-title">Профиль</h3>
+                </div>
+                <!-- Тело карточки -->
+                <div class="card-body">
+                    {% csrf_token %}  {# Токен для обеспечения безопасности #}
+                    {{ form.as_p }}  {# Отображение формы #}
+                    <!-- Кнопка для отправки формы -->
+                    <button type="submit" class="btn btn-outline-success">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}  {# Конец блока контента #}
+  

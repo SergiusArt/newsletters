@@ -1,0 +1,30 @@
+{% extends 'letters/base.html' %}
+
+{% block content %}
+    <!-- Создание формы для входа -->
+    <form method="post" class="row" enctype="multipart/form-data">
+        <div class="col-lg-10">
+            <div class="card">
+                <div class="card-header">
+                    <!-- Заголовок формы -->
+                    <h3 class="card-title">Вход</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Токен для защиты от межсайтовой подделки запроса -->
+                    {% csrf_token %}
+                    <!-- Вывод формы -->
+                    {{ form.as_p }}
+                    <!-- Проверка на наличие ошибок в форме -->
+                    {% if form.errors %}
+                        <!-- Вывод сообщения об ошибке -->
+                        <p class="error-message">Неверный пароль.
+                        <!-- Ссылка на восстановление пароля -->
+                        <a class="p-2 btn btn-outline-danger" href="{% url 'users:reset_password' %}">Восстановить пароль</a></p>
+                    {% endif %}
+                    <!-- Кнопка для отправки формы -->
+                    <button type="submit" class="btn btn-outline-success">Войти</button>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

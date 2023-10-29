@@ -1,0 +1,18 @@
+  
+{% extends 'letters/base.html' %} <!-- Расширение базового шаблона -->
+
+{% block content %} <!-- Начало блока содержимого -->
+
+  <form method="post"> <!-- Форма для отправки данных методом POST -->
+    {% csrf_token %} <!-- Токен для защиты от CSRF-атак -->
+    <label for="verification_code">Код верификации:</label> <!-- Метка поля ввода -->
+    <input type="text" name="verification_code" id="verification_code"> <!-- Поле ввода для ввода кода верификации -->
+    <button type="submit" class="btn btn-outline-success">Подтвердить</button> <!-- Кнопка для отправки формы -->
+  </form>
+
+  {% if error_message %} <!-- Если есть сообщение об ошибке -->
+    <p>{{ error_message }}</p> <!-- Выводим его -->
+  {% endif %}
+
+{% endblock %} <!-- Конец блока содержимого -->
+  
