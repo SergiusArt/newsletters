@@ -2,6 +2,8 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, ListView
+
+from blog.views import is_content_manager, is_manager
 from src.functions import send_mail, generate_password
 from users.forms import UserRegisterForm, UserProfileForm
 from users.models import User
@@ -23,6 +25,12 @@ class RegisterView(CreateView):
         send_mail(email, 'Код подтверждения', verification_code)
         return response
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_content_manager'] = is_content_manager(self.request.user)
+        context['is_manager'] = is_manager(self.request.user)
+        return context
+
 
 # Класс для обновления профиля пользователя
 class ProfileView(UpdateView):
@@ -33,6 +41,12 @@ class ProfileView(UpdateView):
     # Получение объекта пользователя
     def get_object(self, queryset=None):
         return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_content_manager'] = is_content_manager(self.request.user)
+        context['is_manager'] = is_manager(self.request.user)
+        return context
 
 
 # Функция для вывода страницы с одним полем для подтверждения верификации пользователя
@@ -82,7 +96,7 @@ class UserListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     template_name = 'users/user_list.html'
 
     def test_func(self):
-        return self.request.user.is_superuser or self.request.user.is_staff
+        return is_manager(self.request.user)
 
     def post(self, request, *args, **kwargs):
         user_id = request.POST.get('block_user')
@@ -106,3 +120,10 @@ class UserListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
             pass
 
         return self.get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_content_manager'] = is_content_manager(self.request.user)
+        context['is_manager'] = is_manager(self.request.user)
+        return context
+

@@ -43,3 +43,6 @@ class User(AbstractUser):
         # Генерируем уникальный код с помощью функции uuid4()
         self.verification_code = str(uuid.uuid4())[:8]
         super().save(*args, **kwargs)
+
+
+
