@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DetailView
 from django.db.models import Q
 from blog.models import Blog
+from blog.views import is_content_manager, is_manager
 from letters.models import Newsletter, Client, Message, MailLog
 from django.shortcuts import get_object_or_404
 
@@ -23,6 +24,8 @@ class LettersView(TemplateView):
         context['active_newsletters'] = Newsletter.objects.exclude(Q(status='off')).count()
         context['client_count'] = Client.objects.values('email').distinct().count()
         context['blogs'] = Blog.objects.order_by('?')[:3]
+        context['is_content_manager'] = is_content_manager(self.request.user)
+        context['is_manager'] = is_manager(self.request.user)
         return context
 
 
@@ -40,6 +43,8 @@ class NewsletterListView(LoginRequiredMixin, ListView):
     # Получаем контекст для отображения на странице
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['is_content_manager'] = is_content_manager(self.request.user)
+        context['is_manager'] = is_manager(self.request.user)
         if self.request.user.is_superuser or self.request.user.is_staff:
             context['is_staff'] = True
         return context
@@ -73,6 +78,12 @@ class NewsletterUpdateView(LoginRequiredMixin, UpdateView):
         form.fields['message'].queryset = Message.objects.filter(owner=self.request.user)
         return form
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_content_manager'] = is_content_manager(self.request.user)
+        context['is_manager'] = is_manager(self.request.user)
+        return context
+
 
 # Страница добавления рассылки
 class NewsletterCreateView(LoginRequiredMixin, CreateView):
@@ -93,6 +104,12 @@ class NewsletterCreateView(LoginRequiredMixin, CreateView):
         form.fields['message'].queryset = Message.objects.filter(owner=self.request.user)
         return form
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_content_manager'] = is_content_manager(self.request.user)
+        context['is_manager'] = is_manager(self.request.user)
+        return context
+
 
 # Страница с клиентами
 class ClientListView(LoginRequiredMixin, ListView):
@@ -109,6 +126,8 @@ class ClientListView(LoginRequiredMixin, ListView):
     # Получаем контекст для отображения на странице
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['is_content_manager'] = is_content_manager(self.request.user)
+        context['is_manager'] = is_manager(self.request.user)
         return context
 
 
@@ -118,6 +137,12 @@ class ClientUpdateView(LoginRequiredMixin, UpdateView):
     fields = ['email', 'full_name', 'comment']
     template_name = 'letters/client_form.html'
     success_url = reverse_lazy('letters:clients')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_content_manager'] = is_content_manager(self.request.user)
+        context['is_manager'] = is_manager(self.request.user)
+        return context
 
 
 # Страница добавления клиента
@@ -131,6 +156,12 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_content_manager'] = is_content_manager(self.request.user)
+        context['is_manager'] = is_manager(self.request.user)
+        return context
 
 
 # Страница с сообщениями
@@ -148,6 +179,8 @@ class MessageListView(LoginRequiredMixin, ListView):
     # Получаем контекст для отображения на странице
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['is_content_manager'] = is_content_manager(self.request.user)
+        context['is_manager'] = is_manager(self.request.user)
         return context
 
 
@@ -157,6 +190,12 @@ class MessageUpdateView(LoginRequiredMixin, UpdateView):
     fields = ['subject', 'body']
     template_name = 'letters/message_form.html'
     success_url = reverse_lazy('letters:message')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_content_manager'] = is_content_manager(self.request.user)
+        context['is_manager'] = is_manager(self.request.user)
+        return context
 
 
 # Страница добавления сообщения
@@ -171,12 +210,24 @@ class MessageCreateView(LoginRequiredMixin, CreateView):
         form.instance.owner = self.request.user
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_content_manager'] = is_content_manager(self.request.user)
+        context['is_manager'] = is_manager(self.request.user)
+        return context
+
 
 # Страница детального просмотра сообщения
 class MessageDetailView(LoginRequiredMixin, DetailView):
     model = Message
     template_name = 'letters/message_detail.html'
     context_object_name = 'message'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_content_manager'] = is_content_manager(self.request.user)
+        context['is_manager'] = is_manager(self.request.user)
+        return context
 
 
 # Страница с логами
@@ -190,3 +241,11 @@ class MailLogListView(LoginRequiredMixin, ListView):
         queryset = super().get_queryset()
         newsletter_id = self.kwargs.get('pk')
         return queryset.filter(newsletter_id=newsletter_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_content_manager'] = is_content_manager(self.request.user)
+        context['is_manager'] = is_manager(self.request.user)
+        return context
+
+

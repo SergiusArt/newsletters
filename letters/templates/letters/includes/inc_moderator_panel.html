@@ -1,12 +1,12 @@
 <!-- Элемент навигации для Модераторов -->
-{% if user.is_staff %}
+{% if is_manager %}
     <li>
         <a class="nav-link text-white {% if request.path == '/users/users/' %}active{% endif %}" href="{% url 'users:user_list' %}">Пользователи</a>
     </li>
 {% endif %}
 
 <!-- Элемент навигации для Контент-Менеджеров -->
-{% if user.is_content_manager %}
+{% if is_content_manager %}
     <li>
         <a class="nav-link text-white {% if request.path == '/blog/' %}active{% endif %}" href="{% url 'blog:index' %}">Блог</a>
     </li>
